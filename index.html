@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMs como avaliadores de artefatos · LEAS 2026/2</title>
+<meta name="description" content="Claude, GPT e Gemini avaliam artefatos do SBSeg e do SBRC como um comitê: leem, executam num contêiner limpo e decidem os selos. Comparamos com os selos oficiais e com o custo.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Big+Shoulders+Stencil+Display:wght@700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+<link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="topo">
+  <a class="marca" href="#">LLMs como avaliadores de artefatos</a>
+  <nav aria-label="Seções">
+    <a href="#problema">Problema</a>
+    <a href="#metodo">Método</a>
+    <a href="#exemplo">Exemplo</a>
+    <a href="#resultados">Resultados</a>
+    <a href="#linha">Linha do tempo</a>
+    <a href="#limites">Limites</a>
+  </nav>
+</header>
+
+<main id="conteudo">
+
+<section class="heroi">
+  <div class="heroi-texto">
+    <h1>Executar muda o veredito.</h1>
+    <p class="lead">Pedimos a Claude, GPT e Gemini que avaliassem um artefato do SBSeg como um comitê faria: ler o artigo, executar o código num contêiner limpo e decidir os selos Funcional e Reprodutível. Depois comparamos com os selos oficiais e com a conta em dólares.</p>
+    <p class="autoria">Eduardo Prates Tiadoro, Reinaldo Zimmer Wendt e Miguel Ângelo Bastos Muniz<br>Laboratório de Engenharia de Artefatos de Software (LEAS), 2026/2, UNIPAMPA, prof. Diego Kreutz</p>
+  </div>
+
+  <figure class="parecer" aria-labelledby="parecer-titulo">
+    <div class="parecer-cabeca">
+      <p id="parecer-titulo" class="parecer-titulo">Parecer: Foremost-NG, SBSeg 2025</p>
+      <div class="alternador" role="group" aria-label="Momento da decisão">
+        <button type="button" data-momento="A" aria-pressed="false">Só lendo</button>
+        <button type="button" data-momento="B2" aria-pressed="true">Depois de executar</button>
+      </div>
+    </div>
+    <table class="quadro">
+      <caption class="sr">Decisões sobre os selos F e R: comitê oficial e três cadeias de cada LLM</caption>
+      <thead><tr><th scope="col">Quem avalia</th><th scope="col">Funcional (F)</th><th scope="col">Reprodutível (R)</th></tr></thead>
+      <tbody id="quadro-corpo"></tbody>
+    </table>
+    <figcaption class="parecer-legenda">Cada carimbo pequeno é uma das três cadeias de conversa da LLM. <span class="leg sim">Sim</span> atribuído, <span class="leg nao">Não</span> não atribuído, <span class="leg ind">?</span> indeterminado.</figcaption>
+  </figure>
+</section>
+
+<section id="problema" class="secao">
+  <h2>O problema</h2>
+  <div class="problema">
+    <div class="ponto">
+      <p class="ponto-num">1 de 12</p>
+      <p>Na nossa primeira tentativa (T7), só uma das doze decisões das LLMs bateu com o selo oficial.</p>
+    </div>
+    <div class="ponto">
+      <p class="ponto-num">Ler não basta</p>
+      <p>As instruções do SBSeg dizem que ler código ou README não prova que algo funciona. O revisor precisa executar.</p>
+    </div>
+    <div class="ponto">
+      <p class="ponto-num">Poucos revisores</p>
+      <p>O número de artefatos cresce e faltam avaliadores. Uma LLM que avalie bem economiza horas de comitê.</p>
+    </div>
+    <div class="ponto">
+      <p class="ponto-num">O comitê também erra</p>
+      <p>O selo oficial é a referência, não a verdade. Discordar dele só vale com evidência de execução.</p>
+    </div>
+  </div>
+</section>
+
+<section id="metodo" class="secao">
+  <h2>O método, em três versões</h2>
+  <p class="intro">A cada semana o protocolo mudou com o feedback da aula. A T9 é a versão atual.</p>
+  <ol class="versoes">
+    <li>
+      <p class="versao-nome">T7</p>
+      <p>Cada LLM avaliou dois artefatos (Foremost-NG e MiniNet-GUI) com as instruções oficiais, em esforço médio, e decidiu os selos.</p>
+    </li>
+    <li>
+      <p class="versao-nome">T8</p>
+      <p>Separamos quem executa de quem julga: o artefato rodou uma vez, e as três LLMs receberam o mesmo registro. 18 conversas, 72 decisões, 580 evidências conferidas às cegas.</p>
+    </li>
+    <li class="atual">
+      <p class="versao-nome">T9</p>
+      <p>Cada LLM executa o próprio roteiro, sem ajuda humana, num contêiner Ubuntu limpo. Prompts congelados por hash, três cadeias por LLM, tokens e tempo medidos.</p>
+    </li>
+  </ol>
+
+  <div class="cadeia">
+    <div class="cadeia-cabeca">
+      <p class="cadeia-titulo">Uma cadeia da T9, do começo ao fim</p>
+      <button type="button" id="rodar" class="botao">Rodar uma cadeia</button>
+    </div>
+    <ol class="etapas" id="etapas">
+      <li data-etapa="A"><span class="etapa-sigla">A</span><span class="etapa-nome">Análise</span><span class="etapa-desc">Lê artigo, código e instruções. Decide só com a documentação.</span><span class="etapa-tempo">4,9 min em média</span></li>
+      <li data-etapa="B1"><span class="etapa-sigla">B1</span><span class="etapa-nome">Roteiro</span><span class="etapa-desc">Escreve os passos que vai executar, com critérios de sucesso e de falha.</span><span class="etapa-tempo">3,4 min</span></li>
+      <li data-etapa="E" class="no-conteiner"><span class="etapa-sigla">E</span><span class="etapa-nome">Execução</span><span class="etapa-desc">No contêiner: instala, compila, monta imagens de teste, roda o artefato e grava o registro.</span><span class="etapa-tempo">15,7 min</span></li>
+      <li data-etapa="B2"><span class="etapa-sigla">B2</span><span class="etapa-nome">Decisão</span><span class="etapa-desc">Relê o próprio registro e decide de novo F e R.</span><span class="etapa-tempo">1,4 min</span></li>
+    </ol>
+    <p class="cadeia-nota" id="cadeia-nota" aria-live="polite">As quatro etapas acontecem na mesma conversa. Só a execução tem acesso ao contêiner e à chave do VirusTotal.</p>
+  </div>
+</section>
+
+<section id="exemplo" class="secao">
+  <h2>Do artigo ao contêiner</h2>
+  <p class="intro">Um caso real da cadeia 2 do Claude: a reivindicação C3, o trecho do código e o que a execução mostrou.</p>
+  <div class="exemplo">
+    <div class="ex-coluna">
+      <p class="ex-rotulo">O artigo promete</p>
+      <blockquote>Recuperação de binários Mach-O <em>fat</em> e <em>thin</em>, usando o cabeçalho universal ou os comandos de carga para determinar o tamanho.</blockquote>
+      <p class="ex-fonte">Reivindicação C3, artigo p. 6, §3</p>
+    </div>
+    <div class="ex-coluna">
+      <p class="ex-rotulo">O código compara</p>
+<pre><code>uint32_t magic_le = read_le32(buf);
+if (magic_le == 0xCEFAEDFE) { … }
+if (magic_le == 0xCFFAEDFE) { … }</code></pre>
+      <p class="ex-fonte">src/extract.c, linhas 2360 a 2409. Lidos em little-endian, os bytes <code>CF FA ED FE</code> viram <code>0xFEEDFACF</code>, que nunca é igual.</p>
+    </div>
+    <div class="ex-coluna">
+      <p class="ex-rotulo">A execução mostra</p>
+<pre class="terminal"><code>$ foremost-ng -t macho -i c3_thin.dd
+<b>0 FILES EXTRACTED</b>
+
+$ foremost-ng -t macho -i c3_fat.dd
+<b>1 FILES EXTRACTED</b>
+macho=1</code></pre>
+      <p class="ex-fonte">Binários reais do jq 1.7.1 para macOS. O formato fat sai inteiro; o thin, nunca.</p>
+    </div>
+  </div>
+</section>
+
+<section id="resultados" class="secao">
+  <h2>Resultados</h2>
+
+  <div class="bloco">
+    <h3>Quantas decisões bateram com o selo oficial</h3>
+    <div class="barras" id="graf-coincidencia" role="img" aria-label="Coincidência com o selo oficial: T7 1 de 12; T8 só com a documentação 0 de 12, com o registro de execução 5 de 8; T9 só com a documentação 0 de 18, depois de executar 4 de 18."></div>
+    <p class="nota">Na T8, o GPT ficou fora da comparação depois da execução. Na T9, as quatro coincidências são todas no selo F.</p>
+  </div>
+
+  <div class="bloco">
+    <h3>Três defeitos que o comitê não apontou</h3>
+    <div class="defeitos">
+      <div class="defeito"><p class="defeito-num">8 de 8</p><p>cadeias que testaram viram que o Mach-O <em>thin</em> nunca é extraído</p></div>
+      <div class="defeito"><p class="defeito-num">8 de 8</p><p>viram um script só com comentários ser extraído, contra o que o artigo diz</p></div>
+      <div class="defeito"><p class="defeito-num">9 de 9</p><p>não acharam a imagem <code>evidence2.dd</code> da Figura 2, então C6 não pode ser reproduzida</p></div>
+    </div>
+    <p class="nota">Os ELF também saem sem a tabela de seções. Uma cadeia do Gemini não testou Mach-O thin e usou um controle de comentários sem letras, por isso conta 8 e não 9.</p>
+  </div>
+
+  <div class="bloco">
+    <h3>Por que o selo F divide os provedores</h3>
+    <p class="texto">Todas as execuções compilaram e rodaram. A divergência está numa frase do critério: o README "deve informar versões e pelo menos um exemplo mínimo", e o do Foremost-NG não informa.</p>
+    <dl class="leituras">
+      <div><dt>GPT 6 Sol</dt><dd>Leu o critério ao pé da letra e negou F nas três cadeias.</dd></div>
+      <div><dt>Claude Opus 5.5</dt><dd>Negou em duas cadeias. Na terceira, julgou a lacuna "não impeditiva" e atribuiu.</dd></div>
+      <div><dt>Gemini 3.8 Flash</dt><dd>Tratou F como funcional: executou, então atribuiu nas três.</dd></div>
+    </dl>
+  </div>
+
+  <div class="bloco">
+    <h3>Quanto custou cada cadeia</h3>
+    <div class="custos" id="graf-custo"></div>
+    <p class="nota">Preço de API por milhão de tokens. Claude pela tabela da Anthropic; GPT e Gemini por agregadores de preço. Rodamos com assinaturas, então ninguém pagou isso de fato. Mais de 94% dos tokens são leitura de cache: a cada comando, o agente relê a conversa. A execução concentra perto de 80% dos tokens.</p>
+  </div>
+</section>
+
+<section id="linha" class="secao">
+  <h2>O combinado e o entregue</h2>
+  <p class="intro">Cada aula terminou com um combinado. Esta é a lista, lado a lado com o que chegou na aula seguinte.</p>
+  <ol class="linha" id="linha-lista"></ol>
+  <div class="falta">
+    <h3>O que ainda falta</h3>
+    <ul>
+      <li>Avaliar artefatos que não receberam todos os selos pedidos, para medir se as LLMs negam pelos motivos certos.</li>
+      <li>Repetir a T9 com um Gemini mais forte; o Flash foi usado por falta de cota.</li>
+      <li>Obter a <code>evidence2.dd</code>: o e-mail aos autores de 19/10 não teve resposta.</li>
+      <li>Entregar à turma um script que rode o protocolo inteiro pela API.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="limites" class="secao">
+  <h2>Limites declarados</h2>
+  <div class="limites">
+    <details>
+      <summary>Um artefato, e com todos os selos</summary>
+      <p>A T9 avaliou só o Foremost-NG, que recebeu todos os selos. Sem um artefato com selo negado, não dá para saber se as LLMs negam pelos motivos certos ou se só tendem a negar.</p>
+    </details>
+    <details>
+      <summary>Modelos de faixas diferentes</summary>
+      <p>Claude Opus 5.5 e GPT 6 Sol são modelos de topo; o Gemini 3.8 Flash é da linha mais leve do Google. Os níveis de raciocínio também diferem: High, xhigh e High.</p>
+    </details>
+    <details>
+      <summary>Quem executa é quem decide</summary>
+      <p>Na T9, cada LLM escreve o próprio registro de execução e depois decide com ele. O registro não passa por um revisor independente.</p>
+    </details>
+    <details>
+      <summary>Isolamento e rigor desiguais</summary>
+      <p>Os agentes do GPT trabalharam dentro do repositório, onde já estavam os resultados do Claude; a auditoria não encontrou nenhum acesso. A cadeia 3 do Gemini fez testes mais brandos que as outras oito.</p>
+    </details>
+    <details>
+      <summary>Custo estimado, não cobrado</summary>
+      <p>O custo em dólares aplica preços de API aos tokens medidos. Os preços do GPT e do Gemini vêm de sites agregadores, e as sessões que coordenaram os agentes ficaram de fora.</p>
+    </details>
+  </div>
+</section>
+
+<section id="codigo" class="secao fim">
+  <h2>Código, dados e quem fez</h2>
+  <div class="creditos">
+    <div>
+      <h3>Repositórios</h3>
+      <ul class="links">
+        <li><a href="https://github.com/R-ZW/t9-leas">t9-leas</a>: protocolo da T9, prompts, transcrições, registros de execução, tokens e a comparação das três LLMs</li>
+        <li><a href="https://github.com/R-ZW/t8-leas">t8-leas</a>: protocolo da T8, verificação cega das 580 evidências e relatório</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Quem fez</h3>
+      <ul class="pessoas">
+        <li><span class="pessoa">Eduardo Prates Tiadoro</span> rodou e analisou o Claude</li>
+        <li><span class="pessoa">Reinaldo Zimmer Wendt</span> rodou e analisou o GPT</li>
+        <li><span class="pessoa">Miguel Ângelo Bastos Muniz</span> rodou e analisou o Gemini</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="rodape">
+  <p>LEAS 2026/2, UNIPAMPA. Artigo e selos oficiais do Foremost-NG: Anais Estendidos do SBSeg 2025.</p>
+</footer>
+
+<script src="app.js?v=3"></script>
+</body>
+</html>
