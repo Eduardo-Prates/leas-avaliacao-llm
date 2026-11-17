@@ -259,3 +259,8 @@ details p { margin: 10px 0 4px; max-width: var(--medida); }
   .carimbo.batendo { animation: none; }
   .etapas li, .barra-cheia, .custo-barra { transition: none !important; }
 }
+
+/* Vídeo logo abaixo do herói */
+.video { max-width: 1180px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 56px) clamp(48px, 6vw, 80px); }
+.video-titulo { font: 800 clamp(1.8rem, 3.6vw, 2.6rem)/1 var(--display); margin: 0 0 16px; }
+.video video { display: block; width: 100%; height: auto; background: var(--tinta); border: 1px solid var(--linha); }

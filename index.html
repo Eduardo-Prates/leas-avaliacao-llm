@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Big+Shoulders+Stencil+Display:wght@700;800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -17,6 +17,7 @@
 <header class="topo">
   <a class="marca" href="#">LLMs como avaliadores de artefatos</a>
   <nav aria-label="Seções">
+    <a href="#video">Vídeo</a>
     <a href="#problema">Problema</a>
     <a href="#metodo">Método</a>
     <a href="#exemplo">Exemplo</a>
@@ -50,6 +51,15 @@
     </table>
     <figcaption class="parecer-legenda">Cada carimbo pequeno é uma das três cadeias de conversa da LLM. <span class="leg sim">Sim</span> atribuído, <span class="leg nao">Não</span> não atribuído, <span class="leg ind">?</span> indeterminado.</figcaption>
   </figure>
+</section>
+
+<section id="video" class="video" aria-labelledby="video-titulo">
+  <h2 id="video-titulo" class="video-titulo">O projeto em dois minutos</h2>
+  <video controls preload="metadata" playsinline poster="video/capa.jpg" width="1920" height="1080">
+    <source src="video/executar-muda-o-veredito.mp4" type="video/mp4">
+    <track kind="captions" src="video/legendas.vtt" srclang="pt-BR" label="Português">
+  </video>
+  <p class="nota">As legendas já vêm no vídeo. Narração sintética gerada localmente (Kokoro) e sons de bancos livres; os créditos estão em <a href="video/CREDITOS.md">video/CREDITOS.md</a>.</p>
 </section>
 
 <section id="problema" class="secao">
@@ -146,7 +156,7 @@ macho=1</code></pre>
   </div>
 
   <div class="bloco">
-    <h3>Três defeitos que o comitê não apontou</h3>
+    <h3>Três problemas que a execução revelou</h3>
     <div class="defeitos">
       <div class="defeito"><p class="defeito-num">8 de 8</p><p>cadeias que testaram viram que o Mach-O <em>thin</em> nunca é extraído</p></div>
       <div class="defeito"><p class="defeito-num">8 de 8</p><p>viram um script só com comentários ser extraído, contra o que o artigo diz</p></div>
@@ -240,6 +250,6 @@ macho=1</code></pre>
   <p>LEAS 2026/2, UNIPAMPA. Artigo e selos oficiais do Foremost-NG: Anais Estendidos do SBSeg 2025.</p>
 </footer>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

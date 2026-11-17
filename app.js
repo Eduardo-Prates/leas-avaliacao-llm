@@ -15,7 +15,7 @@ const GIROS = [-7, 4, -3, 6, -5, 2, -8, 5, -2];
 
 const COINCIDENCIA = [
   { grupo: "T7" },
-  { rotulo: "Só lendo e decidindo", acertos: 1, total: 12, antes: true },
+  { rotulo: "Primeira avaliação", acertos: 1, total: 12, antes: true },
   { grupo: "T8" },
   { rotulo: "Só com a documentação", acertos: 0, total: 12, antes: true },
   { rotulo: "Com o registro de execução", acertos: 5, total: 8 },
